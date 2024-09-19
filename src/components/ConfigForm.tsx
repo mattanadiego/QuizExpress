@@ -71,8 +71,8 @@ const ConfigForm: React.FC = () => {
           onChange={(e) => setDifficulty(e.target.value)}
         >
           {Object.values(Difficulty).map((difficultyLevel) => (
-            <option key={difficultyLevel} value={difficultyLevel}>
-              {difficultyLevel.toUpperCase()}
+            <option key={difficultyLevel} value={difficultyLevel.toLocaleUpperCase()}>
+              {difficultyLevel}
             </option>
           ))}
         </Select>

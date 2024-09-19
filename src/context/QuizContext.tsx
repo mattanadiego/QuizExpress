@@ -1,8 +1,18 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { Difficulty } from 'utils/constants';
 
 interface triviaCategory {
   id: number,
   name: string,
+}
+
+interface Question {
+  type: 'multiple',
+  difficulty: Difficulty,
+  category: string,
+  question: string,
+  correct_answer: string,
+  incorrect_answers: string[],
 }
 
 interface QuizContextType {
@@ -14,6 +24,8 @@ interface QuizContextType {
   setDifficulty: (difficulty: string) => void;
   isAliasValid: boolean;
   setIsAliasValid: (isAliasValid: boolean) => void;
+  questions: Question[];
+  setQuestions: (questions: Question[]) => void;
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -35,6 +47,7 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
   const [category, setCategory] = useState({id: -1, name: ''});
   const [difficulty, setDifficulty] = useState('');
   const [isAliasValid, setIsAliasValid] = useState(true);
+  const [questions, setQuestions] = useState<Question[]>([]);
 
   return (
     <QuizContext.Provider value={{
@@ -46,6 +59,8 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
       setDifficulty,
       isAliasValid,
       setIsAliasValid,
+      questions,
+      setQuestions,
     }}>
       {children}
     </QuizContext.Provider>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuizContext } from '../context/QuizContext';
 import { Button, Flex, useToast } from '@chakra-ui/react';
 import ConfigForm from '../components/ConfigForm';
+import { fetchQuestions } from 'services/apis';
 
 const Home: React.FC = () => {
   const {
@@ -10,20 +11,37 @@ const Home: React.FC = () => {
     category,
     difficulty,
     setIsAliasValid,
+    setQuestions,
   } = useQuizContext();
   const navigate = useNavigate();
   const toast = useToast()
 
-  const handleStartQuiz = () => {
+  const buildApiUrl = (categoryId: number, difficultyLevel: string) => {
+    let baseUrl = 'https://opentdb.com/api.php?amount=5&type=multiple';
+
+    if (categoryId && categoryId !== -1) {
+      baseUrl +=  `&category=${categoryId}`;
+    }
+
+    if (difficultyLevel !== '') { 
+      baseUrl +=  `&difficulty=${difficultyLevel}`;
+    }
+
+    return baseUrl;
+  };
+
+  const handleStartQuiz = async () => {
     if (alias) {
-      // https://opentdb.com/api.php?amount=5&type=multiple
-      const apiUrl = `https://opentdb.com/api.php?amount=5&category=${category}&difficulty=${difficulty}&type=multiple`;
-      // TODO: invocar servicios de fetch
+      const apiUrl = buildApiUrl(category.id, difficulty.toLowerCase());
       console.log('apiUrl: ', apiUrl);
-      console.log('alias: ', alias);
-      console.log('category: ', category);
-      console.log('difficulty: ', difficulty);
-      navigate('apiUrl'); 
+      try {
+        const fetchedQuestions = await fetchQuestions(apiUrl);
+        setQuestions(fetchedQuestions);
+
+        navigate('/quiz');
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+      } 
     } else {
       setIsAliasValid(!!alias);
       toast({
