@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import he from 'he';
 import { useQuizContext } from '../context/QuizContext';
 import { Box, Button, Flex, useToast } from '@chakra-ui/react';
 import QuizConfig from '../components/QuizConfig';
@@ -36,10 +37,16 @@ const Home: React.FC = () => {
       const apiUrl = buildApiUrl(category.id, difficulty.toLowerCase());
       try {
         const fetchedQuestions = await fetchQuestions(apiUrl);
+        console.log('fetchedQuestions: ', fetchedQuestions);
         const fetchedQuestionsWithAnsweredProp = fetchedQuestions.map(question => ({
           ...question,
+          question: he.decode(question.question),
+          correct_answer: he.decode(question.correct_answer),
+          incorrect_answers: question.incorrect_answers.map(answer => he.decode(answer)),
           answered: false
         }));
+        console.log('fetchedQuestionsWithAnsweredProp: ', fetchedQuestionsWithAnsweredProp);
+
         setQuestions(fetchedQuestionsWithAnsweredProp);
 
         navigate('/quiz');
