@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuizContext } from '../context/QuizContext';
-import { Button, Flex, useToast } from '@chakra-ui/react';
+import { Box, Button, Flex, useToast } from '@chakra-ui/react';
 import QuizConfig from '../components/QuizConfig';
 import { fetchQuestions } from 'services/apis';
 import { quizLength } from 'utils/constants';
@@ -58,16 +58,20 @@ const Home: React.FC = () => {
   };
 
   return (
-    <Flex
-      flexDirection="column"
-      p={4}
-      gap={4}
-    >
-      <h1>Quiz Express</h1>
-      <QuizConfig />
-      <Button colorScheme="blue" mt={4} onClick={handleStartQuiz}>
-        {`Let's Play!`}
-      </Button>
+    <Flex align="center" justify="center" h="100vh">
+      <Box p={8} maxWidth="800px" bg="white" borderRadius="md" shadow="md">
+        <Flex
+          flexDirection="column"
+          p={4}
+          gap={4}
+        >
+          <h1>Quiz Express</h1>
+          <QuizConfig />
+          <Button colorScheme="blue" mt={4} onClick={handleStartQuiz}>
+            {`Let's Play!`}
+          </Button>
+        </Flex>
+      </Box>
     </Flex>
   );
 };
