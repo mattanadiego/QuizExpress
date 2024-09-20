@@ -12,6 +12,10 @@ import {
   Image,
 } from '@chakra-ui/react';
 
+import firstPlace from 'assets/images/firstPlace.png';
+import secondPlace from 'assets/images/secondPlace.png';
+import thirdPlace from 'assets/images/thirdPlace.png';
+
 const Results: React.FC = () => {
   const { alias, score } = useQuizContext();
   const navigate = useNavigate();
@@ -22,8 +26,18 @@ const Results: React.FC = () => {
 
   const getScoreMessage = () => {
     return score === 0
-      ? `Obtuviste ${score} puntos. ¡Sigue intentándolo!`
-      : `Obtuviste ${score} puntos. ¡Buen trabajo!`;
+      ? `Obtuviste ${score} puntos. Vuelve a intentarlo!`
+      : `Obtuviste ${score} puntos. ¡Sigue así!`;
+  };
+
+  const getImagePath = () => {
+    if (score < 40) {
+      return thirdPlace;
+    } else if (score >= 40 && score < 80) {
+      return secondPlace;
+    } else if (score >= 80) {
+      return firstPlace;
+    }
   };
 
   return (
@@ -35,7 +49,7 @@ const Results: React.FC = () => {
         <Text fontSize="xl" textAlign="center" mb={8}>
           {getScoreMessage()}
         </Text>
-        <Image src="/path/to/your/trophy.png" alt="Trofeo" mb={4} />
+        <Image src={getImagePath()} alt="Trofeo" mb={4} />
         <Text fontSize="lg" textAlign="center" mb={4}>
           ¿Quieres seguir jugando?
         </Text>

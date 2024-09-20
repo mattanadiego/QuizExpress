@@ -5,6 +5,9 @@
   "author": "Diego Leonel Mattana",
   "private": true,
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -19,6 +22,7 @@
     "eslint": "^9.10.0",
     "eslint-config-react": "^1.1.7",
     "eslint-plugin-react": "^7.36.1",
+    "framer-motion": "^11.5.5",
     "he": "^1.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -51,5 +55,6 @@
     "@eslint/js": "^9.10.0",
     "globals": "^15.9.0",
     "typescript-eslint": "^8.6.0"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
