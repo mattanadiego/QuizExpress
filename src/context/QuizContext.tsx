@@ -1,31 +1,19 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Difficulty } from 'utils/constants';
-
-interface triviaCategory {
-  id: number,
-  name: string,
-}
-
-interface Question {
-  type: 'multiple',
-  difficulty: Difficulty,
-  category: string,
-  question: string,
-  correct_answer: string,
-  incorrect_answers: string[],
-}
+import { Category, Question } from 'interfaces/quiz';
 
 interface QuizContextType {
   alias: string;
-  category: triviaCategory;
+  category: Category;
   difficulty: string;
   setAlias: (alias: string) => void;
-  setCategory: (category: triviaCategory) => void;
+  setCategory: (category: Category) => void;
   setDifficulty: (difficulty: string) => void;
   isAliasValid: boolean;
   setIsAliasValid: (isAliasValid: boolean) => void;
   questions: Question[];
   setQuestions: (questions: Question[]) => void;
+  score: number;
+  setScore: (score: number) => void;
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -33,7 +21,7 @@ const QuizContext = createContext<QuizContextType | undefined>(undefined);
 export const useQuizContext = (): QuizContextType => {
   const context = useContext(QuizContext);
   if (!context) {
-    throw new Error('useQuizContext debe ser usado dentro de un QuizProvider');
+    throw new Error('There is no valid Quiz context');
   }
   return context;
 };
@@ -48,6 +36,7 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
   const [difficulty, setDifficulty] = useState('');
   const [isAliasValid, setIsAliasValid] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [score, setScore] = useState(0);
 
   return (
     <QuizContext.Provider value={{
@@ -61,6 +50,8 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
       setIsAliasValid,
       questions,
       setQuestions,
+      score,
+      setScore,
     }}>
       {children}
     </QuizContext.Provider>

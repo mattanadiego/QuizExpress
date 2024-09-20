@@ -3,3 +3,5 @@ export enum Difficulty {
     Medium = 'medium',
     Hard = 'hard'
 }
+
+export const quizLength = 5;

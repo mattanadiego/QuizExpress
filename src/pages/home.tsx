@@ -2,8 +2,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuizContext } from '../context/QuizContext';
 import { Button, Flex, useToast } from '@chakra-ui/react';
-import ConfigForm from '../components/ConfigForm';
+import QuizConfig from '../components/QuizConfig';
 import { fetchQuestions } from 'services/apis';
+import { quizLength } from 'utils/constants';
 
 const Home: React.FC = () => {
   const {
@@ -17,7 +18,7 @@ const Home: React.FC = () => {
   const toast = useToast()
 
   const buildApiUrl = (categoryId: number, difficultyLevel: string) => {
-    let baseUrl = 'https://opentdb.com/api.php?amount=5&type=multiple';
+    let baseUrl = `api.php?amount=${quizLength}&type=multiple`;
 
     if (categoryId && categoryId !== -1) {
       baseUrl +=  `&category=${categoryId}`;
@@ -33,10 +34,13 @@ const Home: React.FC = () => {
   const handleStartQuiz = async () => {
     if (alias) {
       const apiUrl = buildApiUrl(category.id, difficulty.toLowerCase());
-      console.log('apiUrl: ', apiUrl);
       try {
         const fetchedQuestions = await fetchQuestions(apiUrl);
-        setQuestions(fetchedQuestions);
+        const fetchedQuestionsWithAnsweredProp = fetchedQuestions.map(question => ({
+          ...question,
+          answered: false
+        }));
+        setQuestions(fetchedQuestionsWithAnsweredProp);
 
         navigate('/quiz');
       } catch (error) {
@@ -60,7 +64,7 @@ const Home: React.FC = () => {
       gap={4}
     >
       <h1>Quiz Express</h1>
-      <ConfigForm />
+      <QuizConfig />
       <Button colorScheme="blue" mt={4} onClick={handleStartQuiz}>
         {`Let's Play!`}
       </Button>
