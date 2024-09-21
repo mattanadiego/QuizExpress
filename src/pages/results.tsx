@@ -1,15 +1,19 @@
 import React from 'react';
-import { useQuizContext } from '../context/QuizContext';
+
+import { Box, Flex } from '@chakra-ui/react';
+
+import ResultsInformation from 'components/ResultsInformaton';
+import ResultsFooter from 'components/ResultsFooter';
 
 const Results: React.FC = () => {
-  const {
-    alias,
-  } = useQuizContext();
 
   return (
-    <div>
-      <h1>¡Results, {alias}! </h1>
-    </div>
+    <Flex align="center" justify="center" h="100vh">
+      <Box p={8} maxWidth="700px" bg="white" borderRadius="md" shadow="md">
+        <ResultsInformation />
+        <ResultsFooter />
+      </Box>
+    </Flex>
   );
 };
 

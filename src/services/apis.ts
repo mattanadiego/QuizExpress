@@ -13,10 +13,6 @@ export enum OpenTDBErrorCode {
   RateLimit = 5,
 }
 
-const api = axios.create({
-  baseURL: BASE_URL
-});
-
 function getErrorMessage(code: OpenTDBErrorCode): string {
   switch (code) {
     case OpenTDBErrorCode.NoResults:
@@ -34,27 +30,14 @@ function getErrorMessage(code: OpenTDBErrorCode): string {
   }
 }
 
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response && error.response.data && error.response.data.response_code) {
-      const openTDBErrorCode = error.response.data.response_code;
-      const errorMessage = getErrorMessage(openTDBErrorCode);
-      const openTDBError = { message: errorMessage, code: openTDBErrorCode };
-      return Promise.reject(openTDBError);
-    }
-    return Promise.reject(error);
-  }
-);
-
 export const fetchCategories = async (): Promise<Category[]> => {
   try {
-    const response = await api.get('api_category.php');
-    return response.data.trivia_categories;
+    const response = await axios.get(`${BASE_URL}api_category.php`);
+    return response?.data?.trivia_categories;
   } catch (error: unknown) {
     if (error instanceof Object && 'code' in error) {
       const typedError = error as { message: string; code: OpenTDBErrorCode };
-      console.error('OpenTDB error:', typedError.message, typedError.code);
+      console.error('OpenTDB error:', getErrorMessage(typedError.code));
     } else {
       console.error('Unexpected error:', error);
     }
@@ -62,14 +45,14 @@ export const fetchCategories = async (): Promise<Category[]> => {
   }
 };
 
-export const fetchQuestions = async (url: string): Promise<Question[]> => {
+export const fetchQuestions = async (apiUrl: string): Promise<Question[]> => {
   try {
-    const response = await api.get(url);
+    const response = await axios.get(`${BASE_URL}${apiUrl}`);
     return response.data.results;
   } catch (error: unknown) {
     if (error instanceof Object && 'code' in error) {
       const typedError = error as { message: string; code: OpenTDBErrorCode };
-      console.error('OpenTDB error:', typedError.message, typedError.code);
+      console.error('OpenTDB error:', getErrorMessage(typedError.code));
     } else {
       console.error('Unexpected error:', error);
     }

@@ -1,6 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Grid } from '@chakra-ui/react';
+import { Button, ButtonProps, Grid, GridProps, Text, TextProps, VStack } from '@chakra-ui/react';
 import { useQuizContext } from 'context/QuizContext';
+
+const questionStyles: TextProps = {
+  fontSize: '20px',
+  fontWeight: 'bold',
+  mb: '20px',
+  padding: '25px',
+  border: '1px',
+  borderRadius: '8px',
+  background: '#F3F3F3',
+};
+
+const gridStyles: GridProps = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(2, 1fr)',
+  gap: '10px',
+};
+
+const buttonStyles: ButtonProps = {
+  paddingX: '20px',
+  paddingY: '12px',
+  fontSize: '16px',
+  borderRadius: '8px',
+  cursor: 'pointer',
+  width: 'auto',
+  height: 'auto',
+  background: 'white',
+  opacity: '1 !important',
+};
 
 interface QuizBodyProps {
   currentQuestionIndex: number;
@@ -63,28 +91,32 @@ const QuizBody: React.FC<QuizBodyProps> = ({
   };
 
   return (
-    <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-      {questionData.mixedAnswers.map((answer, index) => (
-        <Button
-          key={index}
-          variant="outline"
-          colorScheme={
-            questionData.answered
-              ? answer === questionData.correctAnswer
-                ? 'green'
-                : answer === selectedAnswer
-                  ? 'red'
-                  : 'gray'
-              : 'blue'
-          }
-          onClick={() => handleAnswerSubmit(answer)}
-          isDisabled={questionData.answered}
-          isActive={questionData.answered}
-        >
-          {answer}
-        </Button>
-      ))}
-    </Grid>
+    <VStack>
+      <Text {...questionStyles}>{questions[currentQuestionIndex]?.question}</Text>
+      <Grid {...gridStyles}>
+        {questionData.mixedAnswers.map((answer, index) => (
+          <Button
+            key={index}
+            variant="outline"
+            colorScheme={
+              questionData.answered
+                ? answer === questionData.correctAnswer
+                  ? 'green'
+                  : answer === selectedAnswer
+                    ? 'red'
+                    : 'gray'
+                : 'blue'
+            }
+            onClick={() => handleAnswerSubmit(answer)}
+            isDisabled={questionData.answered}
+            isActive={questionData.answered}
+            {...buttonStyles}
+          >
+            {answer}
+          </Button>
+        ))}
+      </Grid>
+    </VStack>
   );
 };
 

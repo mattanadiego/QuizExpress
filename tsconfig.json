@@ -26,7 +26,7 @@
     "eslint.config.mjs",
     "**/*.ts",
     "**/*.tsx"
-, "webpack.config.ts"  ],
+, "webpack.config.ts", "jest.config.ts", "webpack.confg.js"  ],
   "exclude": [
     "node_modules"
   ]
