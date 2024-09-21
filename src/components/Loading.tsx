@@ -34,9 +34,6 @@ export interface LoadingProps {
 const Loading = ({
   isLoading = true,
 } : LoadingProps) => {
-
-  console.log('isLoading: ', isLoading);
-
   return (isLoading && (
     <Box
       as="div"
