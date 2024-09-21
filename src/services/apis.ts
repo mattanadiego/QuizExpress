@@ -1,11 +1,8 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://opentdb.com/';
+import { Category, Question } from 'interfaces/quiz';
 
-interface Category {
-  id: number;
-  name: string;
-}
+const BASE_URL = 'https://opentdb.com/';
 
 export enum OpenTDBErrorCode {
   Success = 0,
@@ -52,8 +49,23 @@ api.interceptors.response.use(
 
 export const fetchCategories = async (): Promise<Category[]> => {
   try {
-    const response = await axios.get(`${BASE_URL}api_category.php`);
+    const response = await api.get('api_category.php');
     return response.data.trivia_categories;
+  } catch (error: unknown) {
+    if (error instanceof Object && 'code' in error) {
+      const typedError = error as { message: string; code: OpenTDBErrorCode };
+      console.error('OpenTDB error:', typedError.message, typedError.code);
+    } else {
+      console.error('Unexpected error:', error);
+    }
+    throw error;
+  }
+};
+
+export const fetchQuestions = async (url: string): Promise<Question[]> => {
+  try {
+    const response = await api.get(url);
+    return response.data.results;
   } catch (error: unknown) {
     if (error instanceof Object && 'code' in error) {
       const typedError = error as { message: string; code: OpenTDBErrorCode };

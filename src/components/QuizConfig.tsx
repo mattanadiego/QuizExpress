@@ -3,9 +3,25 @@ import { useQuizContext } from '../context/QuizContext';
 import { fetchCategories } from '../services/apis';
 import { Difficulty } from '../utils/constants';
 
-import { Input, FormControl, FormLabel, Select, FormErrorMessage, Flex } from '@chakra-ui/react';
+import {
+  Input,
+  FormControl,
+  FormLabel,
+  Select,
+  FormErrorMessage,
+  Flex,
+} from '@chakra-ui/react';
 
-const ConfigForm: React.FC = () => {
+const defaultCategories = [
+  {
+    id: -1,
+    name: '',
+  },
+];
+
+const QuizConfig: React.FC = () => {
+  const [categories, setCategories] = useState(defaultCategories);
+
   const {
     alias,
     category,
@@ -18,8 +34,6 @@ const ConfigForm: React.FC = () => {
   } = useQuizContext();
 
   const handleAliasBlur = () => setIsAliasValid(alias.trim() !== '');
-
-  const [categories, setCategories] = useState([{id: -1, name: ''}]);
 
   useEffect(() => {
     const fetchCategoryData = async () => {
@@ -53,7 +67,7 @@ const ConfigForm: React.FC = () => {
           placeholder="Any category"
           value={category?.id}
           onChange={
-            (e) => setCategory(categories.find((cat) => cat.id.toString() === e.target.value) || {id: -1, name: ''})
+            (e) => setCategory(categories.find((cat) => cat.id.toString() === e.target.value) || { id: -1, name: '' })
           }
         >
           {categories.map((option) => (
@@ -71,8 +85,8 @@ const ConfigForm: React.FC = () => {
           onChange={(e) => setDifficulty(e.target.value)}
         >
           {Object.values(Difficulty).map((difficultyLevel) => (
-            <option key={difficultyLevel} value={difficultyLevel}>
-              {difficultyLevel.toUpperCase()}
+            <option key={difficultyLevel} value={difficultyLevel.toLocaleUpperCase()}>
+              {difficultyLevel}
             </option>
           ))}
         </Select>
@@ -81,4 +95,4 @@ const ConfigForm: React.FC = () => {
   );
 };
 
-export default ConfigForm;
+export default QuizConfig;
