@@ -3,14 +3,29 @@ import { useNavigate } from 'react-router-dom';
 
 import { useQuizContext } from '../context/QuizContext';
 
-import { Box, Button, Flex } from '@chakra-ui/react';
+import { 
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Flex,
+  Stack,
+} from '@chakra-ui/react';
 import QuizInformationHeader from 'components/QuizInformationHeader';
 import QuizBody from 'components/QuizBody';
+
+const containerStyles = {
+  padding: '16px',
+  borderRadius: '8px',
+  backgroundImage: 'radial-gradient(circle, #FFD700 1px, transparent 2px)', 
+  backgroundSize: '20px 20px',
+};
 
 const Quiz: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState('');
-  
+
   const {
     questions,
     setScore,
@@ -27,7 +42,7 @@ const Quiz: React.FC = () => {
   const handleFinishQuiz = () => {
     navigate('/results');
   }
-  
+
   const handleAnswerClicked = (answer: string) => {
     questions[currentQuestionIndex].answered = true;
     setSelectedAnswer(answer);
@@ -38,26 +53,34 @@ const Quiz: React.FC = () => {
   }, []);
 
   return (
-    <Box p={4}>
-      <QuizInformationHeader
-        currentQuestionIndex={currentQuestionIndex}
-      />
-      <Flex direction="column" gap={4}>
-        <QuizBody
-          currentQuestionIndex={currentQuestionIndex}
-          selectedAnswer={selectedAnswer}
-          handleAnswerClicked={handleAnswerClicked}
-        />
-        <Button
-          colorScheme={isLastQuestion ? 'red' : 'blue'}
-          mt={4}
-          onClick={!isLastQuestion ? handleNextQuestion : handleFinishQuiz}
-          isDisabled={!questions[currentQuestionIndex].answered}
-        >
-          {isLastQuestion ? 'Finish' : 'Next Question'}
-        </Button>
-      </Flex>
-    </Box>
+    <Flex align="center" justify="center" h="100vh" maxW="70vw" m="0 auto">
+      <Card variant='outline' shadow="md" {...containerStyles}>
+        <Stack>
+          <CardHeader>
+            <QuizInformationHeader
+              currentQuestionIndex={currentQuestionIndex}
+            />
+          </CardHeader>
+          <CardBody>
+            <QuizBody
+              currentQuestionIndex={currentQuestionIndex}
+              selectedAnswer={selectedAnswer}
+              handleAnswerClicked={handleAnswerClicked}
+            />
+          </CardBody>
+          <CardFooter justify="center">
+            <Button
+              colorScheme={isLastQuestion ? 'red' : 'blue'}
+              mt={4}
+              onClick={!isLastQuestion ? handleNextQuestion : handleFinishQuiz}
+              isDisabled={!questions[currentQuestionIndex].answered}
+            >
+              {isLastQuestion ? 'Finish' : 'Next Question'}
+            </Button>
+          </CardFooter>
+        </Stack>
+      </Card>
+    </Flex>
   );
 };
 

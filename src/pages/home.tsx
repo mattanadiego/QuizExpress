@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import he from 'he';
 import { useQuizContext } from '../context/QuizContext';
-import { Box, Button, Flex, useToast } from '@chakra-ui/react';
+import { Box, Button, Center, Flex, Image, useToast } from '@chakra-ui/react';
 import QuizConfig from '../components/QuizConfig';
-import { fetchQuestions } from 'services/apis';
-import { quizLength } from 'utils/constants';
+import { startQuiz } from 'utils/quizActions';
+
+import QuizExpressLogo from 'assets/images/QuizExpressLogo.png';
+import Loading from 'components/Loading';
 
 const Home: React.FC = () => {
   const {
@@ -18,41 +19,14 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
   const toast = useToast()
 
-  const buildApiUrl = (categoryId: number, difficultyLevel: string) => {
-    let baseUrl = `api.php?amount=${quizLength}&type=multiple`;
-
-    if (categoryId && categoryId !== -1) {
-      baseUrl +=  `&category=${categoryId}`;
-    }
-
-    if (difficultyLevel !== '') { 
-      baseUrl +=  `&difficulty=${difficultyLevel}`;
-    }
-
-    return baseUrl;
-  };
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleStartQuiz = async () => {
     if (alias) {
-      const apiUrl = buildApiUrl(category.id, difficulty.toLowerCase());
-      try {
-        const fetchedQuestions = await fetchQuestions(apiUrl);
-        console.log('fetchedQuestions: ', fetchedQuestions);
-        const fetchedQuestionsWithAnsweredProp = fetchedQuestions.map(question => ({
-          ...question,
-          question: he.decode(question.question),
-          correct_answer: he.decode(question.correct_answer),
-          incorrect_answers: question.incorrect_answers.map(answer => he.decode(answer)),
-          answered: false
-        }));
-        console.log('fetchedQuestionsWithAnsweredProp: ', fetchedQuestionsWithAnsweredProp);
-
-        setQuestions(fetchedQuestionsWithAnsweredProp);
-
-        navigate('/quiz');
-      } catch (error) {
-        console.error('Error fetching questions:', error);
-      } 
+      setIsLoading(true)
+      await startQuiz(category.id, difficulty.toLowerCase(), setQuestions);
+      navigate('/quiz');
+      setIsLoading(false);
     } else {
       setIsAliasValid(!!alias);
       toast({
@@ -65,18 +39,23 @@ const Home: React.FC = () => {
   };
 
   return (
-    <Flex align="center" justify="center" h="100vh">
-      <Box p={8} maxWidth="800px" bg="white" borderRadius="md" shadow="md">
+    <Flex align="center" justify="center" h="100vh">      
+      <Loading isLoading={isLoading}  />
+      <Box p={8} maxWidth="700px" bg="white" borderRadius="md" shadow="md">
         <Flex
           flexDirection="column"
           p={4}
           gap={4}
         >
-          <h1>Quiz Express</h1>
+          <Center>
+            <Image src={QuizExpressLogo} alt="Logo" width="75%" />
+          </Center>
           <QuizConfig />
-          <Button colorScheme="blue" mt={4} onClick={handleStartQuiz}>
-            {`Let's Play!`}
-          </Button>
+          <Center>
+            <Button colorScheme="green" mt={4} onClick={handleStartQuiz}>
+              {`Let's Play!`}
+            </Button>
+          </Center>
         </Flex>
       </Box>
     </Flex>

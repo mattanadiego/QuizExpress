@@ -11,6 +11,7 @@ import {
   FormErrorMessage,
   Flex,
 } from '@chakra-ui/react';
+import Loading from './Loading';
 
 const defaultCategories = [
   {
@@ -21,6 +22,7 @@ const defaultCategories = [
 
 const QuizConfig: React.FC = () => {
   const [categories, setCategories] = useState(defaultCategories);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const {
     alias,
@@ -37,21 +39,32 @@ const QuizConfig: React.FC = () => {
 
   useEffect(() => {
     const fetchCategoryData = async () => {
+      setIsLoading(true);
       try {
         const fetchedCategories = await fetchCategories();
         setCategories(fetchedCategories);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
+      finally {
+        setIsLoading(false);
+      }
     };
 
     fetchCategoryData();
   }, []);
 
+  useEffect(() => {
+    setAlias('');
+    setIsAliasValid(true);
+    setCategory(defaultCategories[0]);
+    setDifficulty('');
+  }, [categories]);
 
   return (
     <Flex flexDirection="column" gap={2}>
-      <FormControl isRequired isInvalid={!isAliasValid}>
+      <Loading isLoading={isLoading}  />
+      <FormControl isRequired isInvalid={!isAliasValid} isDisabled={isLoading}>
         <FormLabel>Alias</FormLabel>
         <Input
           type="text"
@@ -61,7 +74,7 @@ const QuizConfig: React.FC = () => {
         />
         {!isAliasValid && <FormErrorMessage>Alias is required.</FormErrorMessage>}
       </FormControl>
-      <FormControl>
+      <FormControl isDisabled={isLoading}>
         <FormLabel>Category</FormLabel>
         <Select
           placeholder="Any category"
@@ -77,7 +90,7 @@ const QuizConfig: React.FC = () => {
           ))}
         </Select>
       </FormControl>
-      <FormControl>
+      <FormControl isDisabled={isLoading}>
         <FormLabel>Difficulty</FormLabel>
         <Select
           placeholder="Any difficulty"

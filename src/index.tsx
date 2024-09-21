@@ -5,7 +5,6 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
 import { QuizProvider } from 'context/QuizContext';
 
-import './index.css';
 import Home from 'pages/home';
 import Quiz from 'pages/quiz';
 import Results from 'pages/results';
@@ -19,11 +18,11 @@ root.render(
     <Router>
       <ChakraProvider>
         <QuizProvider>
-        <Routes>
+          <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/quiz" element={<Quiz />} />
             <Route path="/results" element={<Results />} />
-        </Routes>
+          </Routes>
         </QuizProvider>
       </ChakraProvider>
     </Router>
